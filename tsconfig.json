@@ -20,7 +20,7 @@
       "@components/*": ["src/components/*"],
       "@store/*": ["src/store/*"],
       "@views/*": ["src/views/*"],
-      "@directives/*": ["src/directives/*"]
+      "@directives/*": ["src/common/directives/*"]
     },
 
     "strict": true,

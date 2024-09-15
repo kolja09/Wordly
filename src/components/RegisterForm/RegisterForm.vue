@@ -2,100 +2,95 @@
   <form class="auth-form-wrapper" @submit.prevent="submitRegister">
     <div class="form-container">
       <div class="birth-date">
-        <label class="label">Дата рождения</label>
+        <label class="label">{{ $t("labels.birthDate") }}</label>
         <div class="birth-date-options">
           <Select
             v-model="registerData.day"
+            :has-error="v$.registerData.day.$error"
             :options="dayOptions"
-            placeholder="Число"
+            :placeholder="$t('placeholder.day')"
           />
           <Select
+            :has-error="v$.registerData.month.$error"
             v-model="registerData.month"
             :options="monthOptions"
-            placeholder="Месяц"
+            :placeholder="$t('placeholder.month')"
           />
           <Select
+            :has-error="v$.registerData.year.$error"
             v-model="registerData.year"
             :options="yearOptions"
-            placeholder="Год"
+            :placeholder="$t('placeholder.year')"
           />
+        </div>
+        <div
+          v-if="
+            v$.registerData.day.$error ||
+            v$.registerData.month.$error ||
+            v$.registerData.year.$error
+          "
+          class="error-message"
+        >
+          {{ $t("errors.birthDateRequired") }}
         </div>
       </div>
-
-      <div class="input-wrapper">
-        <label class="label" for="email">Эл. почта</label>
-        <div class="styles-input-container">
-          <input
-            id="email"
-            placeholder="Введите адрес эл. почты или имя пользователя"
-            class="styles-input"
-            v-model="registerData.email"
-            :class="{ invalid: v$.registerData.email.$error }"
-          />
-        </div>
-        <div v-if="v$.registerData.email.$error" class="error-message">
-          Некорректный адрес электронной почты
-        </div>
-      </div>
-
-      <div class="input-wrapper">
-        <label class="label" for="userName">Имя пользователя</label>
-        <div class="styles-input-container">
-          <input
-            id="userName"
-            type="text"
-            placeholder="Введите имя пользователя"
-            class="styles-input"
-            v-model="registerData.username"
-            :class="{ invalid: v$.registerData.username.$error }"
-          />
-        </div>
-        <div v-if="v$.registerData.username.$error" class="error-message">
-          {{ v$.registerData.username.$errors[0]?.$message }}
-        </div>
-      </div>
-
-      <div class="input-wrapper password-field">
-        <label class="label" for="password">Пароль</label>
-        <div class="styles-input-container">
-          <input
-            class="styles-input"
-            id="password"
-            :type="showPassword ? 'text' : 'password'"
-            placeholder="Введите пароль"
-            v-model="registerData.password"
-            :class="{ invalid: v$.registerData.password.$error }"
-          />
-          <img
-            @click="showPassword = !showPassword"
-            :class="{ active: showPassword }"
-            class="eye-icon"
-            src="@/assets/eye.svg"
-            alt="eye"
-          />
-        </div>
-        <div v-if="v$.registerData.password.$error" class="error-message">
-          {{ v$.registerData.password.$errors[0]?.$message }}
-        </div>
-      </div>
+      <InputField
+        id="email"
+        v-model="registerData.email"
+        :label="$t('labels.email')"
+        :placeholder="$t('placeholder.email')"
+        :has-error="v$.registerData.email.$error"
+        :error-message="v$.registerData.email.$errors[0]?.$message.toString()"
+      />
+      <InputField
+        id="userName"
+        v-model="registerData.username"
+        :label="$t('labels.userName')"
+        :placeholder="$t('placeholder.userName')"
+        :has-error="v$.registerData.username.$error"
+        :error-message="
+          v$.registerData.username.$errors[0]?.$message.toString()
+        "
+      />
+      <InputField
+        id="password"
+        v-model="registerData.password"
+        :label="$t('labels.password')"
+        type="password"
+        :placeholder="$t('placeholder.password')"
+        :has-error="v$.registerData.password.$error"
+        :error-message="
+          v$.registerData.password.$errors[0]?.$message.toString()
+        "
+      />
     </div>
 
     <div class="action-buttons">
       <Button class="custom-button" size="large" @click="submitRegister">
-        Зарегистрироваться
+        {{ $t("registerButton") }}
+      </Button>
+      <Button
+        size="large"
+        class="custom-button--outline"
+        @click="$emit('switchToRegister')"
+      >
+        {{ $t("switchToLogin") }}
       </Button>
     </div>
   </form>
 </template>
   
   <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import useVuelidate from "@vuelidate/core";
-import { required, email, helpers } from "@vuelidate/validators";
+import { useI18n } from "vue-i18n";
+import { useValidators } from "@/common/validators";
+
 import Button from "@components/Button/Button.vue";
 import Select from "@components/Select/Select.vue";
+import InputField from "@components/InputField/InputField.vue";
 
-const showPassword = ref(false);
+const { t } = useI18n();
 
 const registerData = ref({
   day: "",
@@ -106,29 +101,20 @@ const registerData = ref({
   password: "",
 });
 
-const requiredField = helpers.withMessage(
-  "Это поле обязательно для заполнения",
-  required
-);
-
-const password = helpers.withMessage(
-  "Пароль должен содержать минимум 8 символов, включая заглавную букву, строчную букву, цифру и специальный символ",
-  (value) =>
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])(?=.{8,})/.test(
-      value as string
-    )
-);
-
-const userNameField = helpers.withMessage(
-  "Имя пользователя должно содержать минимум 2 символа",
-  (value) => (value as string).length >= 3
-);
+const { requiredField, emailValidator, passwordValidator, userNameValidator } =
+  useValidators();
 
 const rules = {
   registerData: {
-    email: { required: requiredField, email },
-    password: { required: requiredField, password },
-    username: { required: requiredField, userNameField },
+    email: { required: requiredField(), email: emailValidator() },
+    username: {
+      required: requiredField(),
+      userNameValidator: userNameValidator(),
+    },
+    password: { required: requiredField(), password: passwordValidator() },
+    day: { required: requiredField() },
+    month: { required: requiredField() },
+    year: { required: requiredField() },
   },
 };
 
@@ -141,24 +127,35 @@ const submitRegister = () => {
   }
 };
 
-const dayOptions = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
-const monthOptions = [
-  "Январь",
-  "Февраль",
-  "Март",
-  "Апрель",
-  "Май",
-  "Июнь",
-  "Июль",
-  "Август",
-  "Сентябрь",
-  "Октябрь",
-  "Ноябрь",
-  "Декабрь",
-];
-const yearOptions = Array.from({ length: 100 }, (_, i) =>
-  (new Date().getFullYear() - i).toString()
-);
+const dayOptions = Array.from({ length: 31 }, (_, i) => ({
+  id: (i + 1).toString(),
+  name: (i + 1).toString(),
+}));
+
+const monthOptions = computed(() => {
+  return [
+    t("months.january"),
+    t("months.february"),
+    t("months.march"),
+    t("months.april"),
+    t("months.may"),
+    t("months.june"),
+    t("months.july"),
+    t("months.august"),
+    t("months.september"),
+    t("months.october"),
+    t("months.november"),
+    t("months.december"),
+  ].map((month, index) => ({
+    id: (index + 1).toString(),
+    name: month,
+  }));
+});
+
+const yearOptions = Array.from({ length: 100 }, (_, i) => {
+  const year = (new Date().getFullYear() - i).toString();
+  return { id: year, name: year };
+});
 </script>
   
   <style scoped>
@@ -171,41 +168,6 @@ const yearOptions = Array.from({ length: 100 }, (_, i) =>
   display: flex;
   flex-direction: column;
   gap: 22px;
-}
-
-.label {
-  font-size: 14px;
-  font-weight: bold;
-
-  color: #586380;
-}
-
-.styles-input-container {
-  position: relative;
-
-  margin-top: 8px;
-}
-
-.styles-input {
-  width: 100%;
-  padding: 12px 16px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #282e3e;
-  background-color: #f6f7fb;
-  border: 2px solid transparent;
-  border-radius: 8px;
-  outline: none;
-  transition: border-color 0.3s ease;
-}
-
-.styles-input:focus {
-  border-bottom-color: black;
-}
-
-.styles-input.invalid {
-  border-bottom-color: #e57373;
-  background-color: #fce4ec;
 }
 
 .error-message {
@@ -233,28 +195,6 @@ const yearOptions = Array.from({ length: 100 }, (_, i) =>
 
 .custom-button--outline:hover {
   background-color: #edeff4;
-}
-
-.eye-icon {
-  padding: 5px;
-
-  width: 30px;
-
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-}
-
-.eye-icon:hover {
-  background-color: #edeff4;
-  border-radius: 50%;
-}
-
-.eye-icon.active {
-  background-color: #edeff4;
-  border-radius: 50%;
 }
 
 .action-buttons {

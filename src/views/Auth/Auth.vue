@@ -3,11 +3,7 @@
     <div class="auth-container">
       <div class="auth-image-section">
         <h2>
-          {{
-            isLogin
-              ? "Щелкайте модули как орешки."
-              : "Самый лучший способ учиться. Чтобы сохранить прогресс!"
-          }}
+          {{ isLogin ? $t("welcome") : $t("welcomeRegister") }}
         </h2>
         <img
           class="auth-bg-image"
@@ -18,17 +14,18 @@
       </div>
 
       <div class="auth-form-section">
+        <LanguageSwitcher class="language-switcher" />
         <div class="auth-form-header">
-          <span :class="{ active: isLogin }" @click="isLogin = true">
-            Вход
-          </span>
           <span :class="{ active: !isLogin }" @click="isLogin = false">
-            Зарегистрироваться
+            {{ $t("register") }}
+          </span>
+          <span :class="{ active: isLogin }" @click="isLogin = true">
+            {{ $t("login") }}
           </span>
         </div>
 
-        <LoginForm v-if="isLogin" />
-        <RegisterForm v-else />
+        <LoginForm @switchToRegister="handleSwitchToRegister" v-if="isLogin" />
+        <RegisterForm @switchToRegister="handleSwitchToRegister" v-else />
       </div>
     </div>
   </div>
@@ -38,11 +35,17 @@
 <script setup lang="ts">
 import LoginForm from "@/components/LoginForm/LoginForm.vue";
 import RegisterForm from "@/components/RegisterForm/RegisterForm.vue";
+import LanguageSwitcher from "@/components/LanguageSwitcher/LanguageSwitcher.vue";
 
 import { ref } from "vue";
 
 const isLogin = ref(true);
+
+const handleSwitchToRegister = () => {
+  isLogin.value = !isLogin.value;
+};
 </script>
+
 
 <style scoped>
 .auth-page {
@@ -91,11 +94,22 @@ const isLogin = ref(true);
 }
 
 .auth-form-section {
+  position: relative;
+
+  box-sizing: content-box;
   margin: 0 auto;
 
   max-width: 576px;
   width: 100%;
-  padding: 64px 0;
+  padding: 60px 20px;
+
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.auth-form-section::-webkit-scrollbar {
+  display: none;
 }
 
 .auth-form-header {
@@ -132,7 +146,13 @@ const isLogin = ref(true);
   background-repeat: no-repeat;
 }
 
-@media (max-width: 1024px) {
+.language-switcher {
+  position: absolute;
+  right: 20px;
+  top: 40px;
+}
+
+@media (max-width: 1200px) {
   .auth-image-section {
     display: none;
   }

@@ -30,10 +30,8 @@ export default defineConfig({
         replacement: fileURLToPath(new URL("./src/views", import.meta.url)),
       },
       {
-        find: "@directives",
-        replacement: fileURLToPath(
-          new URL("./src/directives", import.meta.url)
-        ),
+        find: "@common",
+        replacement: fileURLToPath(new URL("./src/common", import.meta.url)),
       },
     ],
   },

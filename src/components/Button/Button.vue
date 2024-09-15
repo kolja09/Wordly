@@ -37,6 +37,8 @@ const onClick = () => {
   cursor: pointer;
   font-weight: 500;
   transition: background-color 0.3s ease;
+
+  outline: none;
 }
 
 .custom-button:hover {

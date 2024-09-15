@@ -1,0 +1,48 @@
+{
+  "login": "Login",
+  "register": "Register",
+  "registerButton": "Register",
+  "loginButton": "Login",
+  "ua": "Ukrainian",
+  "en": "English",
+  "forgotPassword": "Forgot password?",
+  "welcome": "Learn easily and efficiently with us!",
+  "welcomeRegister": "The best way to learn. To save your progress!",
+  "switchToRegister": "New to Quizlet? Create an account",
+  "switchToLogin": "Have an account? Login",
+  "months": {
+    "january": "January",
+    "february": "February",
+    "march": "March",
+    "april": "April",
+    "may": "May",
+    "june": "June",
+    "july": "July",
+    "august": "August",
+    "september": "September",
+    "october": "October",
+    "november": "November",
+    "december": "December"
+  },
+  "placeholder": {
+    "password": "Enter your password",
+    "email": "Enter your email address",
+    "userName": "Enter your username",
+    "day": "Day",
+    "month": "Month",
+    "year": "Year"
+  },
+  "labels": {
+    "birthDate": "Date of birth",
+    "email": "Email",
+    "password": "Password",
+    "userName": "User name"
+  },
+  "errors": {
+    "birthDateRequired": "Please enter your date of birth",
+    "requiredField": "This field is required",
+    "password": "Password must contain at least 8 characters, including an uppercase letter, a lowercase letter, a number, and a special character",
+    "userNameField": "Username must contain at least 2 characters",
+    "invalidEmail": "Please enter a valid email address"
+  }
+}
