@@ -8,7 +8,7 @@
     >
       <img v-if="lang === 'ua'" src="@/assets/flag-ua.png" alt="UA" />
       <img v-if="lang === 'en'" src="@/assets/flag-en.png" alt="EN" />
-      {{ $t(getLanguageName(lang)) }}
+      {{ t(getLanguageName(lang)) }}
     </button>
   </div>
 </template>
@@ -19,7 +19,7 @@ import { useI18n } from "vue-i18n";
 
 const availableLanguages = ["ua", "en"];
 
-const { locale } = useI18n();
+const { locale, t } = useI18n();
 const currentLang = ref(locale.value);
 
 const switchLanguage = (lang: string) => {

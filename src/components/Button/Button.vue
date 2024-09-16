@@ -20,7 +20,6 @@ const props = defineProps({
 
 const emit = defineEmits(["click"]);
 
-// Обработка клика
 const onClick = () => {
   emit("click");
 };

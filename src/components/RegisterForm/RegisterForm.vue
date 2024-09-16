@@ -2,79 +2,75 @@
   <form class="auth-form-wrapper" @submit.prevent="submitRegister">
     <div class="form-container">
       <div class="birth-date">
-        <label class="label">{{ $t("labels.birthDate") }}</label>
+        <label class="label">{{ t("labels.birthDate") }}</label>
         <div class="birth-date-options">
           <Select
             v-model="registerData.day"
-            :has-error="v$.registerData.day.$error"
+            :has-error="v.registerData.day.$error"
             :options="dayOptions"
-            :placeholder="$t('placeholder.day')"
+            :placeholder="t('placeholder.day')"
           />
           <Select
-            :has-error="v$.registerData.month.$error"
+            :has-error="v.registerData.month.$error"
             v-model="registerData.month"
             :options="monthOptions"
-            :placeholder="$t('placeholder.month')"
+            :placeholder="t('placeholder.month')"
           />
           <Select
-            :has-error="v$.registerData.year.$error"
+            :has-error="v.registerData.year.$error"
             v-model="registerData.year"
             :options="yearOptions"
-            :placeholder="$t('placeholder.year')"
+            :placeholder="t('placeholder.year')"
           />
         </div>
         <div
           v-if="
-            v$.registerData.day.$error ||
-            v$.registerData.month.$error ||
-            v$.registerData.year.$error
+            v.registerData.day.$error ||
+            v.registerData.month.$error ||
+            v.registerData.year.$error
           "
           class="error-message"
         >
-          {{ $t("errors.birthDateRequired") }}
+          {{ t("errors.birthDateRequired") }}
         </div>
       </div>
       <InputField
         id="email"
         v-model="registerData.email"
-        :label="$t('labels.email')"
-        :placeholder="$t('placeholder.email')"
-        :has-error="v$.registerData.email.$error"
-        :error-message="v$.registerData.email.$errors[0]?.$message.toString()"
+        :label="t('labels.email')"
+        :placeholder="t('placeholder.email')"
+        :has-error="v.registerData.email.$error"
+        :error-message="v.registerData.email.$errors[0]?.$message.toString()"
       />
       <InputField
         id="userName"
         v-model="registerData.username"
-        :label="$t('labels.userName')"
-        :placeholder="$t('placeholder.userName')"
-        :has-error="v$.registerData.username.$error"
-        :error-message="
-          v$.registerData.username.$errors[0]?.$message.toString()
-        "
+        :label="t('labels.userName')"
+        :placeholder="t('placeholder.userName')"
+        :has-error="v.registerData.username.$error"
+        :error-message="v.registerData.username.$errors[0]?.$message.toString()"
       />
       <InputField
         id="password"
         v-model="registerData.password"
-        :label="$t('labels.password')"
+        :label="t('labels.password')"
         type="password"
-        :placeholder="$t('placeholder.password')"
-        :has-error="v$.registerData.password.$error"
-        :error-message="
-          v$.registerData.password.$errors[0]?.$message.toString()
-        "
+        :placeholder="t('placeholder.password')"
+        :has-error="v.registerData.password.$error"
+        :error-message="v.registerData.password.$errors[0]?.$message.toString()"
       />
     </div>
 
     <div class="action-buttons">
       <Button class="custom-button" size="large" @click="submitRegister">
-        {{ $t("registerButton") }}
+        {{ t("registerButton") }}
       </Button>
       <Button
         size="large"
         class="custom-button--outline"
         @click="$emit('switchToRegister')"
       >
-        {{ $t("switchToLogin") }}
+        {{ t("switchToLogin") }}
       </Button>
     </div>
   </form>
@@ -86,7 +82,7 @@ import useVuelidate from "@vuelidate/core";
 import { useI18n } from "vue-i18n";
 import { useValidators } from "@/common/validators";
 
-import Button from "@components/Button/Button.vue";
+import Button from "./../Button/Button.vue";
 import Select from "@components/Select/Select.vue";
 import InputField from "@components/InputField/InputField.vue";
 
@@ -118,11 +114,11 @@ const rules = {
   },
 };
 
-const v$ = useVuelidate(rules, { registerData });
+const v: any = useVuelidate(rules, { registerData });
 
 const submitRegister = () => {
-  v$.value.$touch();
-  if (!v$.value.$invalid) {
+  v.value.$touch();
+  if (!v.value.$invalid) {
     console.log("Registering with:", registerData.value);
   }
 };

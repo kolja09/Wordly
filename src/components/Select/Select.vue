@@ -6,7 +6,7 @@
   >
     <div class="custom-select" @click="toggleDropdown">
       <span class="custom-select-value">
-        {{ selectedValue ? selectedValue.name : placeholder }}
+        {{ selectedName || placeholder }}
       </span>
       <span class="custom-select-arrow">▼</span>
     </div>
@@ -15,7 +15,7 @@
         v-for="option in options"
         :key="option.id"
         class="custom-select-option"
-        @click="selectOption(option)"
+        @click="selectOption(option.id)"
       >
         {{ option.name }}
       </li>
@@ -24,15 +24,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, computed, watch } from "vue";
 
 const props = defineProps({
   modelValue: {
-    type: Object,
-    default: null,
+    type: String,
+    default: "",
   },
   options: {
-    type: Array as () => { id: string | number; name: string }[],
+    type: Array as () => { id: string; name: string }[],
     required: true,
   },
   placeholder: {
@@ -58,9 +58,16 @@ const closeDropdown = () => {
   isOpen.value = false;
 };
 
-const selectOption = (option: { id: string | number; name: string }) => {
-  selectedValue.value = option;
-  emit("update:modelValue", option);
+const selectedName = computed(() => {
+  const selectedOption = props.options.find(
+    (option) => option.id === selectedValue.value
+  );
+  return selectedOption ? selectedOption.name : null;
+});
+
+const selectOption = (id: string) => {
+  selectedValue.value = id;
+  emit("update:modelValue", id);
   isOpen.value = false;
 };
 

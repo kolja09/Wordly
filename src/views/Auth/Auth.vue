@@ -3,7 +3,7 @@
     <div class="auth-container">
       <div class="auth-image-section">
         <h2>
-          {{ isLogin ? $t("welcome") : $t("welcomeRegister") }}
+          {{ isLogin ? t("welcome") : t("welcomeRegister") }}
         </h2>
         <img
           class="auth-bg-image"
@@ -17,10 +17,10 @@
         <LanguageSwitcher class="language-switcher" />
         <div class="auth-form-header">
           <span :class="{ active: !isLogin }" @click="isLogin = false">
-            {{ $t("register") }}
+            {{ t("register") }}
           </span>
           <span :class="{ active: isLogin }" @click="isLogin = true">
-            {{ $t("login") }}
+            {{ t("login") }}
           </span>
         </div>
 
@@ -38,8 +38,10 @@ import RegisterForm from "@/components/RegisterForm/RegisterForm.vue";
 import LanguageSwitcher from "@/components/LanguageSwitcher/LanguageSwitcher.vue";
 
 import { ref } from "vue";
+import { useI18n } from "vue-i18n";
 
 const isLogin = ref(true);
+const { t } = useI18n();
 
 const handleSwitchToRegister = () => {
   isLogin.value = !isLogin.value;

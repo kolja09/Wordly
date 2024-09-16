@@ -4,35 +4,35 @@
       <InputField
         id="email"
         v-model="loginData.email"
-        :label="$t('labels.email')"
-        :placeholder="$t('placeholder.email')"
-        :has-error="v$.loginData.email.$error"
-        :error-message="v$.loginData.email.$errors[0]?.$message.toString()"
+        :label="t('labels.email')"
+        :placeholder="t('placeholder.email')"
+        :has-error="v.loginData.email.$error"
+        :error-message="v.loginData.email.$errors[0]?.$message.toString()"
       />
 
       <InputField
         id="password"
         v-model="loginData.password"
-        :label="$t('labels.password')"
+        :label="t('labels.password')"
         type="password"
-        :placeholder="$t('placeholder.password')"
-        :has-error="v$.loginData.password.$error"
-        :error-message="v$.loginData.password.$errors[0]?.$message.toString()"
+        :placeholder="t('placeholder.password')"
+        :has-error="v.loginData?.password.$error"
+        :error-message="v?.loginData?.password?.$errors[0]?.$message.toString()"
       />
 
-      <a href="#" class="forgot-password">{{ $t("forgotPassword") }}</a>
+      <a href="#" class="forgot-password">{{ t("forgotPassword") }}</a>
     </div>
 
     <div class="action-buttons">
       <Button class="custom-button" size="large" @click="submitLogin">
-        {{ $t("loginButton") }}
+        {{ t("loginButton") }}
       </Button>
       <Button
         size="large"
         class="custom-button--outline"
         @click="$emit('switchToRegister')"
       >
-        {{ $t("switchToRegister") }}
+        {{ t("switchToRegister") }}
       </Button>
     </div>
   </form>
@@ -44,9 +44,10 @@ import { ref } from "vue";
 import useVuelidate from "@vuelidate/core";
 
 import Button from "@components/Button/Button.vue";
-import InputField from "@components/InputField/InputField.vue";
+import InputField from "@/components/InputField/InputField.vue";
 
 import { useValidators } from "@/common/validators";
+import { useI18n } from "vue-i18n";
 
 const loginData = ref({
   email: "",
@@ -62,11 +63,12 @@ const rules = {
   },
 };
 
-const v$ = useVuelidate(rules, { loginData });
+const v: any = useVuelidate(rules, { loginData });
+const { t } = useI18n();
 
 const submitLogin = () => {
-  v$.value.$touch();
-  if (!v$.value.$invalid) {
+  v.value.$touch();
+  if (!v.value.$invalid) {
     console.log("Logging in with:", loginData.value);
   }
 };
