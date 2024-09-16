@@ -8,5 +8,4 @@
 </script>
 
 <style scoped>
-/* Ваши стили */
 </style>

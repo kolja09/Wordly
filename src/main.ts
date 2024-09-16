@@ -8,7 +8,6 @@ import i18n from "./i18n";
 import App from "./App.vue";
 import "./style.css";
 
-// Создание приложения
 const app = createApp(App);
 
 app.directive("click-outside", clickOutside);
